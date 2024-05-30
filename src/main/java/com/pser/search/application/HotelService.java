@@ -22,8 +22,12 @@ public class HotelService {
         return result.map(hotelMapper::toResponse);
     }
 
-    public void save(HotelDto hotelDto) {
+    public void saveOrUpdate(HotelDto hotelDto) {
         Hotel document = hotelMapper.toDocument(hotelDto);
         hotelDao.save(document);
+    }
+
+    public void delete(HotelDto hotelDto) {
+        hotelDao.deleteById(hotelDto.getId());
     }
 }

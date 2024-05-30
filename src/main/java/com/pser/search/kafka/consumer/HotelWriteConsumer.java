@@ -16,9 +16,16 @@ public class HotelWriteConsumer {
     private final HotelService hotelService;
 
     @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5")
-    @KafkaListener(topics = {KafkaTopics.HOTEL_CREATED, KafkaTopics.HOTEL_UPDATED,
+    @KafkaListener(topics = {KafkaTopics.HOTEL_CREATED,
+            KafkaTopics.HOTEL_UPDATED}, groupId = "${kafka.consumer-group-id}", containerFactory = "hotelDtoValueListenerContainerFactory")
+    public void onCreatedOrUpdated(HotelDto hotelDto) {
+        hotelService.saveOrUpdate(hotelDto);
+    }
+
+    @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5")
+    @KafkaListener(topics = {
             KafkaTopics.HOTEL_DELETED}, groupId = "${kafka.consumer-group-id}", containerFactory = "hotelDtoValueListenerContainerFactory")
-    public void onCreated(HotelDto hotelDto) {
-        hotelService.save(hotelDto);
+    public void onDeleted(HotelDto hotelDto) {
+        hotelService.delete(hotelDto);
     }
 }
