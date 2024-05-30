@@ -1,0 +1,11 @@
+{
+  "properties": {
+    "category": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "korean"
+    }
+  }
+}
