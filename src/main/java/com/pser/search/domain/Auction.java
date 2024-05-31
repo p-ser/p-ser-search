@@ -53,6 +53,6 @@ public class Auction {
     @Field(type = FieldType.Integer)
     private Integer depositPrice;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Integer)
     private AuctionStatusEnum status;
 }

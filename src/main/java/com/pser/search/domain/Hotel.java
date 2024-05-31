@@ -33,7 +33,7 @@ public class Hotel {
     @Field(type = FieldType.Text, analyzer = ESConstants.ANALYZER_KOREAN)
     private String name;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Integer)
     private HotelCategoryEnum category;
 
     @Field(type = FieldType.Text, analyzer = ESConstants.ANALYZER_KOREAN)

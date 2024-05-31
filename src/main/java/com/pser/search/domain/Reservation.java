@@ -60,6 +60,6 @@ public class Reservation {
     @Field(type = FieldType.Integer)
     private Integer childCount;
 
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Integer)
     private ReservationStatusEnum status;
 }

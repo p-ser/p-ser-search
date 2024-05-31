@@ -1,8 +1,12 @@
 package com.pser.search.config;
 
+import com.pser.search.domain.AuctionStatusEnumConverter;
+import com.pser.search.domain.HotelCategoryEnumConverter;
+import com.pser.search.domain.ReservationStatusEnumConverter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -13,9 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
+import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
 
 @Configuration
-public class ElasticSearchConfig extends ElasticsearchConfiguration {
+public class ElasticsearchConfig extends ElasticsearchConfiguration {
     @Value("${spring.data.elasticsearch.url}")
     private String url;
 
@@ -58,6 +63,21 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         return allHostsValid;
 
+    }
+
+    @Override
+    @NonNull
+    public ElasticsearchCustomConversions elasticsearchCustomConversions() {
+        return new ElasticsearchCustomConversions(
+                Arrays.asList(
+                        new HotelCategoryEnumConverter.ToEnumConverter(),
+                        new HotelCategoryEnumConverter.ToIntegerConverter(),
+                        new AuctionStatusEnumConverter.ToEnumConverter(),
+                        new AuctionStatusEnumConverter.ToIntegerConverter(),
+                        new ReservationStatusEnumConverter.ToEnumConverter(),
+                        new ReservationStatusEnumConverter.ToIntegerConverter()
+                )
+        );
     }
 
     @Override
