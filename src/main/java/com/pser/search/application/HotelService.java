@@ -22,6 +22,12 @@ public class HotelService {
         return result.map(hotelMapper::toResponse);
     }
 
+    public HotelResponse getById(long hotelId) {
+        Hotel hotel = hotelDao.findById(hotelId)
+                .orElseThrow();
+        return hotelMapper.toResponse(hotel);
+    }
+
     public void saveOrUpdate(HotelDto hotelDto) {
         Hotel document = hotelMapper.toDocument(hotelDto);
         hotelDao.save(document);
