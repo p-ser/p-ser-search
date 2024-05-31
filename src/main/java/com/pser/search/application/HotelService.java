@@ -7,7 +7,6 @@ import com.pser.search.dto.mapper.HotelMapper;
 import com.pser.search.dto.request.HotelSearchRequest;
 import com.pser.search.dto.response.HotelResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,8 @@ public class HotelService {
     private final HotelDao hotelDao;
     private final HotelMapper hotelMapper;
 
-    public Slice<HotelResponse> search(HotelSearchRequest request, Pageable pageable) {
-        Slice<Hotel> result = hotelDao.search(request, pageable);
+    public Slice<HotelResponse> search(HotelSearchRequest request) {
+        Slice<Hotel> result = hotelDao.search(request);
         return result.map(hotelMapper::toResponse);
     }
 

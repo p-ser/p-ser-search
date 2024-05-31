@@ -19,9 +19,8 @@ public class HotelApi {
     private final HotelService hotelService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Slice<HotelResponse>>> search(HotelSearchRequest request,
-                                                                    @PageableDefault Pageable pageable) {
-        Slice<HotelResponse> result = hotelService.search(request, pageable);
+    public ResponseEntity<ApiResponse<Slice<HotelResponse>>> search(HotelSearchRequest request) {
+        Slice<HotelResponse> result = hotelService.search(request);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 

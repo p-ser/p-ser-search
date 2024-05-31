@@ -17,6 +17,7 @@ import org.mapstruct.MappingConstants.ComponentModel;
 
 @Mapper(componentModel = ComponentModel.SPRING)
 public interface HotelMapper {
+
     HotelResponse toResponse(Hotel hotel);
 
     FacilityResponse toResponse(Facility facility);

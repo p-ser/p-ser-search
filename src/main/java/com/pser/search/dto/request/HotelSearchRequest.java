@@ -12,6 +12,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HotelSearchRequest extends SearchQuery {
+    private Double userLatitude;
+
+    private Double userLongitude;
+
+    private Integer minDistance;
+
+    private Integer maxDistance;
+
+    private Long userId;
 
     private String name;
 
