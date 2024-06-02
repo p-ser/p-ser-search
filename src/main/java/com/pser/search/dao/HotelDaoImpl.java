@@ -3,6 +3,7 @@ package com.pser.search.dao;
 import co.elastic.clients.elasticsearch._types.DistanceUnit;
 import co.elastic.clients.elasticsearch._types.GeoDistanceType;
 import co.elastic.clients.elasticsearch._types.LatLonGeoLocation;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
@@ -24,9 +26,10 @@ public class HotelDaoImpl implements HotelDaoCustom {
     private final ElasticsearchOperations operations;
 
     @Override
-    public Slice<Hotel> search(HotelSearchRequest request) {
-        Builder boolQueryBuilder = QueryBuilders.bool();
+    public Slice<Hotel> search(HotelSearchRequest request, Pageable pageable) {
+        List<Object> searchAfter = List.of(request.getScoreAfter(), request.getIdAfter());
 
+        Builder boolQueryBuilder = QueryBuilders.bool();
         setOwnerFilterQuery(boolQueryBuilder, request);
         setDistanceQuery(boolQueryBuilder, request);
         setHotelFilterQuery(boolQueryBuilder, request);
@@ -34,12 +37,31 @@ public class HotelDaoImpl implements HotelDaoCustom {
 
         NativeQuery query = NativeQuery.builder()
                 .withQuery(q -> q.bool(boolQueryBuilder.build()))
+                .withSearchAfter(searchAfter)
+                .withMaxResults(pageable.getPageSize() + 1)
+                .withSort(s ->
+                        s.field(f -> f
+                                .field("_score")
+                                .order(SortOrder.Desc)
+                        )
+                )
+                .withSort(s ->
+                        s.field(f -> f
+                                .field("id")
+                                .order(SortOrder.Asc)
+                        )
+                )
                 .build();
         List<Hotel> result = operations.search(query, Hotel.class)
                 .map(SearchHit::getContent)
                 .stream()
                 .collect(Collectors.toList());
-        return new SliceImpl<>(result);
+
+        boolean hasNext = result.size() > pageable.getPageSize();
+        if (hasNext) {
+            result.remove(result.size() - 1);
+        }
+        return new SliceImpl<>(result, pageable, hasNext);
     }
 
     private void setOwnerFilterQuery(Builder builder, HotelSearchRequest request) {
@@ -53,6 +75,10 @@ public class HotelDaoImpl implements HotelDaoCustom {
     }
 
     private void setDistanceQuery(Builder builder, HotelSearchRequest request) {
+        if (request.getUserLatitude() == null || request.getUserLongitude() == null) {
+            return;
+        }
+
         Integer maxDistance = Optional.ofNullable(request.getMaxDistance()).orElse(5);
         Integer minDistance = request.getMinDistance();
 
@@ -64,6 +90,13 @@ public class HotelDaoImpl implements HotelDaoCustom {
 
     private void setHotelFilterQuery(Builder builder, HotelSearchRequest request) {
         if (request.getName() != null) {
+            builder.filter(f -> f.match(
+                    m -> m
+                            .field("name")
+                            .query(request.getName())
+            ));
+        }
+        if (request.getCategory() != null) {
             builder.filter(f -> f.match(
                     m -> m
                             .field("category")

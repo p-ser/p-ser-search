@@ -80,7 +80,8 @@ public class HotelSearchRequest extends SearchQuery {
 
 
     @Builder
-    public HotelSearchRequest(String keyword, LocalDateTime createdAfter, LocalDateTime createdBefore,
+    public HotelSearchRequest(String keyword, Double scoreAfter, Long idAfter, LocalDateTime createdAfter,
+                              LocalDateTime createdBefore,
                               LocalDateTime updatedAfter, LocalDateTime updatedBefore, String name,
                               HotelCategoryEnum category, String province, String city, String district,
                               String detailedAddress, Boolean parkingLot, Boolean wifi, Boolean barbecue, Boolean sauna,
@@ -89,7 +90,7 @@ public class HotelSearchRequest extends SearchQuery {
                               Boolean snackBar, Boolean petFriendly, Integer people, LocalDate startAt,
                               LocalDate startAtAfter, LocalDate startAtBefore, LocalDate endAt, LocalDate endAtAfter,
                               LocalDate endAtBefore) {
-        super(keyword, createdAfter, createdBefore, updatedAfter, updatedBefore);
+        super(keyword, scoreAfter, idAfter, createdAfter, createdBefore, updatedAfter, updatedBefore);
         this.name = name;
         this.category = category;
         this.province = province;
