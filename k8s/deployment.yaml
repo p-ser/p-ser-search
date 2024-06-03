@@ -18,7 +18,8 @@ spec:
             name: app-config
       containers:
         - name: search-container
-          image: amanecopse/p-ser-search
+          image: amanecopse/p-ser-search:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           volumeMounts:
