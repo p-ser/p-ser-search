@@ -33,6 +33,9 @@ public class Reservation {
     @Field(type = FieldType.Nested)
     private Room room;
 
+    @Field(type = FieldType.Nested)
+    private Hotel hotel;
+
     @Field(type = FieldType.Long)
     private Long userId;
 
