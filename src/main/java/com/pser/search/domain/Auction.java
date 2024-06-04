@@ -19,7 +19,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @NoArgsConstructor
 @Setting(settingPath = "elasticsearch/setting.json")
 @Document(indexName = ESConstants.DOC_AUCTION)
-public class Auction {
+public class Auction implements BaseDocument {
     @Id
     private Long id;
 

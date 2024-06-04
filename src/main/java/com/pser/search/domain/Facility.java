@@ -14,7 +14,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Facility {
+public class Facility implements BaseDocument {
     @Id
     private Long id;
 

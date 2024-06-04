@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class SearchQuery {
     private String keyword;
 
-    private Double scoreAfter = 1.0;
+    private Double scoreAfter = 10000.0;
 
     private Long idAfter = 0L;
 

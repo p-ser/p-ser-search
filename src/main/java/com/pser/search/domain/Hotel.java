@@ -19,7 +19,7 @@ import org.springframework.data.elasticsearch.core.geo.GeoPoint;
 @NoArgsConstructor
 @Setting(settingPath = "elasticsearch/setting.json")
 @Document(indexName = ESConstants.DOC_HOTEL)
-public class Hotel {
+public class Hotel implements BaseDocument {
     @Id
     private Long id;
 

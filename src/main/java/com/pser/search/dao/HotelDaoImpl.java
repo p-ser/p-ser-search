@@ -3,75 +3,66 @@ package com.pser.search.dao;
 import co.elastic.clients.elasticsearch._types.DistanceUnit;
 import co.elastic.clients.elasticsearch._types.GeoDistanceType;
 import co.elastic.clients.elasticsearch._types.LatLonGeoLocation;
-import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import com.pser.search.dao.SearchDao.SearchQueryArgument;
 import com.pser.search.domain.Hotel;
+import com.pser.search.dto.SearchSlice;
 import com.pser.search.dto.request.HotelSearchRequest;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 
 @RequiredArgsConstructor
 public class HotelDaoImpl implements HotelDaoCustom {
-    private final ElasticsearchOperations operations;
+    private final SearchDao searchDao;
 
     @Override
-    public Slice<Hotel> search(HotelSearchRequest request, Pageable pageable) {
-        List<Object> searchAfter = List.of(request.getScoreAfter(), request.getIdAfter());
-
+    public SearchSlice<Hotel> search(HotelSearchRequest request, Pageable pageable) {
         Builder boolQueryBuilder = QueryBuilders.bool();
+        setKeywordQuery(boolQueryBuilder, request);
         setOwnerFilterQuery(boolQueryBuilder, request);
         setDistanceQuery(boolQueryBuilder, request);
         setHotelFilterQuery(boolQueryBuilder, request);
         setFacilityFilterQuery(boolQueryBuilder, request);
 
-        NativeQuery query = NativeQuery.builder()
-                .withQuery(q -> q.bool(boolQueryBuilder.build()))
-                .withSearchAfter(searchAfter)
-                .withMaxResults(pageable.getPageSize() + 1)
-                .withSort(s ->
-                        s.field(f -> f
-                                .field("_score")
-                                .order(SortOrder.Desc)
-                        )
-                )
-                .withSort(s ->
-                        s.field(f -> f
-                                .field("id")
-                                .order(SortOrder.Asc)
-                        )
-                )
+        SearchQueryArgument<Hotel> searchQueryArgument = SearchQueryArgument.<Hotel>builder()
+                .mappingClass(Hotel.class)
+                .pageable(pageable)
+                .boolQueryBuilder(boolQueryBuilder)
+                .scoreAfter(request.getScoreAfter())
+                .idAfter(request.getIdAfter())
                 .build();
-        List<Hotel> result = operations.search(query, Hotel.class)
-                .map(SearchHit::getContent)
-                .stream()
-                .collect(Collectors.toList());
+        return searchDao.search(searchQueryArgument);
+    }
 
-        boolean hasNext = result.size() > pageable.getPageSize();
-        if (hasNext) {
-            result.remove(result.size() - 1);
+    private void setKeywordQuery(Builder builder, HotelSearchRequest request) {
+        if (request.getKeyword() == null) {
+            return;
         }
-        return new SliceImpl<>(result, pageable, hasNext);
+
+        builder.must(
+                m -> m.multiMatch(
+                        mm -> mm.fields("%s^3".formatted("name"),
+                                        "description",
+                                        "notice")
+                                .query(request.getKeyword())
+                )
+        );
     }
 
     private void setOwnerFilterQuery(Builder builder, HotelSearchRequest request) {
-        if (request.getHotelOwnerId() != null) {
-            builder.filter(f -> f.match(
-                    m -> m
-                            .field("userId")
-                            .query(request.getHotelOwnerId())
-            ));
+        if (request.getHotelOwnerId() == null) {
+            return;
         }
+
+        builder.filter(f -> f.match(
+                m -> m
+                        .field("userId")
+                        .query(request.getHotelOwnerId())
+        ));
     }
 
     private void setDistanceQuery(Builder builder, HotelSearchRequest request) {

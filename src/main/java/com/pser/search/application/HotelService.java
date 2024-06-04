@@ -3,6 +3,7 @@ package com.pser.search.application;
 import com.pser.search.dao.HotelDao;
 import com.pser.search.domain.Hotel;
 import com.pser.search.dto.HotelDto;
+import com.pser.search.dto.SearchSlice;
 import com.pser.search.dto.mapper.HotelMapper;
 import com.pser.search.dto.request.HotelSearchRequest;
 import com.pser.search.dto.response.HotelResponse;
@@ -17,8 +18,8 @@ public class HotelService {
     private final HotelDao hotelDao;
     private final HotelMapper hotelMapper;
 
-    public Slice<HotelResponse> search(HotelSearchRequest request, Pageable pageable) {
-        Slice<Hotel> result = hotelDao.search(request, pageable);
+    public SearchSlice<HotelResponse> search(HotelSearchRequest request, Pageable pageable) {
+        SearchSlice<Hotel> result = hotelDao.search(request, pageable);
         return result.map(hotelMapper::toResponse);
     }
 

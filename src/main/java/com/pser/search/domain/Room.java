@@ -19,7 +19,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setting(settingPath = "elasticsearch/setting.json")
-public class Room {
+public class Room implements BaseDocument {
     @Id
     private Long id;
 
