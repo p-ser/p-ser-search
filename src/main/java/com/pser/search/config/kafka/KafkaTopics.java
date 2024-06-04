@@ -7,4 +7,6 @@ public interface KafkaTopics {
     String ROOM_CREATED = "room.created";
     String ROOM_UPDATED = "room.updated";
     String ROOM_DELETED = "room.deleted";
+    String RESERVATION_CREATED = "reservation.created";
+    String RESERVATION_UPDATED = "reservation.updated";
 }
