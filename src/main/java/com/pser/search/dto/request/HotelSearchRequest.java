@@ -3,9 +3,7 @@ package com.pser.search.dto.request;
 
 import com.pser.search.domain.HotelCategoryEnum;
 import com.pser.search.dto.SearchQuery;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +18,7 @@ public class HotelSearchRequest extends SearchQuery {
 
     private Integer maxDistance;
 
-    private Long userId;
+    private Long hotelOwnerId;
 
     private String name;
 
@@ -66,31 +64,22 @@ public class HotelSearchRequest extends SearchQuery {
 
     private Integer people;
 
-    private LocalDate startAt;
 
-    private LocalDate startAtAfter;
-
-    private LocalDate startAtBefore;
-
-    private LocalDate endAt;
-
-    private LocalDate endAtAfter;
-
-    private LocalDate endAtBefore;
-
-
-    @Builder
     public HotelSearchRequest(String keyword, Double scoreAfter, Long idAfter, LocalDateTime createdAfter,
-                              LocalDateTime createdBefore,
-                              LocalDateTime updatedAfter, LocalDateTime updatedBefore, String name,
-                              HotelCategoryEnum category, String province, String city, String district,
-                              String detailedAddress, Boolean parkingLot, Boolean wifi, Boolean barbecue, Boolean sauna,
-                              Boolean swimmingPool, Boolean restaurant, Boolean roofTop, Boolean fitness, Boolean dryer,
-                              Boolean breakfast, Boolean smokingArea, Boolean allTimeDesk, Boolean luggageStorage,
-                              Boolean snackBar, Boolean petFriendly, Integer people, LocalDate startAt,
-                              LocalDate startAtAfter, LocalDate startAtBefore, LocalDate endAt, LocalDate endAtAfter,
-                              LocalDate endAtBefore) {
+                              LocalDateTime createdBefore, LocalDateTime updatedAfter, LocalDateTime updatedBefore,
+                              Double userLatitude, Double userLongitude, Integer minDistance, Integer maxDistance,
+                              Long hotelOwnerId, String name, HotelCategoryEnum category, String province, String city,
+                              String district, String detailedAddress, Boolean parkingLot, Boolean wifi,
+                              Boolean barbecue,
+                              Boolean sauna, Boolean swimmingPool, Boolean restaurant, Boolean roofTop, Boolean fitness,
+                              Boolean dryer, Boolean breakfast, Boolean smokingArea, Boolean allTimeDesk,
+                              Boolean luggageStorage, Boolean snackBar, Boolean petFriendly, Integer people) {
         super(keyword, scoreAfter, idAfter, createdAfter, createdBefore, updatedAfter, updatedBefore);
+        this.userLatitude = userLatitude;
+        this.userLongitude = userLongitude;
+        this.minDistance = minDistance;
+        this.maxDistance = maxDistance;
+        this.hotelOwnerId = hotelOwnerId;
         this.name = name;
         this.category = category;
         this.province = province;
@@ -113,11 +102,5 @@ public class HotelSearchRequest extends SearchQuery {
         this.snackBar = snackBar;
         this.petFriendly = petFriendly;
         this.people = people;
-        this.startAt = startAt;
-        this.startAtAfter = startAtAfter;
-        this.startAtBefore = startAtBefore;
-        this.endAt = endAt;
-        this.endAtAfter = endAtAfter;
-        this.endAtBefore = endAtBefore;
     }
 }

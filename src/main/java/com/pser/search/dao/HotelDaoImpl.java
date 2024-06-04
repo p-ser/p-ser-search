@@ -65,11 +65,11 @@ public class HotelDaoImpl implements HotelDaoCustom {
     }
 
     private void setOwnerFilterQuery(Builder builder, HotelSearchRequest request) {
-        if (request.getUserId() != null) {
+        if (request.getHotelOwnerId() != null) {
             builder.filter(f -> f.match(
                     m -> m
                             .field("userId")
-                            .query(request.getUserId())
+                            .query(request.getHotelOwnerId())
             ));
         }
     }
@@ -89,6 +89,13 @@ public class HotelDaoImpl implements HotelDaoCustom {
     }
 
     private void setHotelFilterQuery(Builder builder, HotelSearchRequest request) {
+        if (request.getHotelOwnerId() != null) {
+            builder.filter(f -> f.match(
+                    m -> m
+                            .field("userId")
+                            .query(request.getHotelOwnerId())
+            ));
+        }
         if (request.getName() != null) {
             builder.filter(f -> f.match(
                     m -> m
