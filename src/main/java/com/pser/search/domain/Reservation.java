@@ -20,7 +20,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @NoArgsConstructor
 @Setting(settingPath = "elasticsearch/setting.json")
 @Document(indexName = ESConstants.DOC_RESERVATION)
-public class Reservation {
+public class Reservation implements BaseDocument {
     @Id
     private Long id;
 
