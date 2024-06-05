@@ -11,7 +11,6 @@ import com.pser.search.Util;
 import com.pser.search.dao.SearchDao.SearchQueryArgument;
 import com.pser.search.domain.Reservation;
 import com.pser.search.dto.SearchSlice;
-import com.pser.search.dto.request.AuctionSearchRequest;
 import com.pser.search.dto.request.ReservationSearchRequest;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,7 @@ public class ReservationDaoImpl implements ReservationDaoCustom {
         Builder boolQueryBuilder = QueryBuilders.bool();
         setKeywordQuery(boolQueryBuilder, request);
         setOwnerFilterQuery(boolQueryBuilder, request);
+        setReservationQuery(boolQueryBuilder, request);
         setHotelFilterQuery(boolQueryBuilder, request);
         setFacilityFilterQuery(boolQueryBuilder, request);
 
@@ -88,7 +88,7 @@ public class ReservationDaoImpl implements ReservationDaoCustom {
         );
     }
 
-    private void setReservationQuery(Builder builder, AuctionSearchRequest request) {
+    private void setReservationQuery(Builder builder, ReservationSearchRequest request) {
         if (request.getStartAt() != null) {
             builder.filter(
                     f -> f.match(
