@@ -184,31 +184,31 @@ public class ReservationDaoImpl implements ReservationDaoCustom {
             ));
         }
         if (request.getProvince() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field(path + "." + "province.keyword")
-                            .query(request.getProvince())
+                            .field(path + "." + "province")
+                            .value(request.getProvince())
             ));
         }
         if (request.getCity() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field(path + "." + "city.keyword")
-                            .query(request.getCity())
+                            .field(path + "." + "city")
+                            .value(request.getCity())
             ));
         }
         if (request.getDistrict() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field(path + "." + "district.keyword")
-                            .query(request.getDistrict())
+                            .field(path + "." + "district")
+                            .value(request.getDistrict())
             ));
         }
         if (request.getDetailedAddress() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field(path + "." + "detailedAddress.keyword")
-                            .query(request.getDetailedAddress())
+                            .field(path + "." + "detailedAddress")
+                            .value(request.getDetailedAddress())
             ));
         }
 

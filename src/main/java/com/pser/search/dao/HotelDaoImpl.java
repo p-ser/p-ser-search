@@ -102,31 +102,31 @@ public class HotelDaoImpl implements HotelDaoCustom {
             ));
         }
         if (request.getProvince() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field("province.keyword")
-                            .query(request.getProvince())
+                            .field("province")
+                            .value(request.getProvince())
             ));
         }
         if (request.getCity() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field("city.keyword")
-                            .query(request.getCity())
+                            .field("city")
+                            .value(request.getCity())
             ));
         }
         if (request.getDistrict() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field("district.keyword")
-                            .query(request.getDistrict())
+                            .field("district")
+                            .value(request.getDistrict())
             ));
         }
         if (request.getDetailedAddress() != null) {
-            builder.filter(f -> f.match(
+            builder.filter(f -> f.term(
                     m -> m
-                            .field("detailedAddress.keyword")
-                            .query(request.getDetailedAddress())
+                            .field("detailedAddress")
+                            .value(request.getDetailedAddress())
             ));
         }
     }
