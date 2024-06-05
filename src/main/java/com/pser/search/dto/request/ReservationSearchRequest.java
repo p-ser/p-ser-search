@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -66,16 +67,22 @@ public class ReservationSearchRequest extends SearchQuery {
 
     private Integer people;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAt;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAtAfter;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAtBefore;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAt;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAtAfter;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAtBefore;
 
 
@@ -84,11 +91,14 @@ public class ReservationSearchRequest extends SearchQuery {
                                     LocalDateTime createdBefore,
                                     LocalDateTime updatedAfter, LocalDateTime updatedBefore, String name,
                                     HotelCategoryEnum category, String province, String city, String district,
-                                    String detailedAddress, Boolean parkingLot, Boolean wifi, Boolean barbecue, Boolean sauna,
-                                    Boolean swimmingPool, Boolean restaurant, Boolean roofTop, Boolean fitness, Boolean dryer,
+                                    String detailedAddress, Boolean parkingLot, Boolean wifi, Boolean barbecue,
+                                    Boolean sauna,
+                                    Boolean swimmingPool, Boolean restaurant, Boolean roofTop, Boolean fitness,
+                                    Boolean dryer,
                                     Boolean breakfast, Boolean smokingArea, Boolean allTimeDesk, Boolean luggageStorage,
                                     Boolean snackBar, Boolean petFriendly, Integer people, LocalDate startAt,
-                                    LocalDate startAtAfter, LocalDate startAtBefore, LocalDate endAt, LocalDate endAtAfter,
+                                    LocalDate startAtAfter, LocalDate startAtBefore, LocalDate endAt,
+                                    LocalDate endAtAfter,
                                     LocalDate endAtBefore) {
         super(keyword, scoreAfter, idAfter, createdAfter, createdBefore, updatedAfter, updatedBefore);
         this.name = name;

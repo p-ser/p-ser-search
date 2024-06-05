@@ -7,14 +7,15 @@ import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import com.pser.search.Util;
 import com.pser.search.dao.SearchDao.SearchQueryArgument;
 import com.pser.search.domain.Reservation;
 import com.pser.search.dto.SearchSlice;
+import com.pser.search.dto.request.AuctionSearchRequest;
 import com.pser.search.dto.request.ReservationSearchRequest;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
 @RequiredArgsConstructor
 public class ReservationDaoImpl implements ReservationDaoCustom {
@@ -85,6 +86,58 @@ public class ReservationDaoImpl implements ReservationDaoCustom {
                                 .query(q -> q.bool(roomQuery))
                 )
         );
+    }
+
+    private void setReservationQuery(Builder builder, AuctionSearchRequest request) {
+        if (request.getStartAt() != null) {
+            builder.filter(
+                    f -> f.match(
+                            r -> r.query(Util.toFormattedString(request.getStartAtAfter()))
+                                    .field("startAt")
+                    )
+            );
+        }
+        if (request.getStartAtAfter() != null) {
+            builder.filter(
+                    f -> f.range(
+                            r -> r.gte(Util.toJsonData(request.getStartAtAfter()))
+                                    .field("startAt")
+                    )
+            );
+        }
+        if (request.getStartAtBefore() != null) {
+            builder.filter(
+                    f -> f.range(
+                            r -> r.lte(Util.toJsonData(request.getStartAtBefore()))
+                                    .field("startAt")
+                    )
+            );
+        }
+
+        if (request.getEndAt() != null) {
+            builder.filter(
+                    f -> f.match(
+                            r -> r.query(Util.toFormattedString(request.getEndAt()))
+                                    .field("endAt")
+                    )
+            );
+        }
+        if (request.getEndAtAfter() != null) {
+            builder.filter(
+                    f -> f.range(
+                            r -> r.gte(Util.toJsonData(request.getEndAtAfter()))
+                                    .field("endAt")
+                    )
+            );
+        }
+        if (request.getEndAtBefore() != null) {
+            builder.filter(
+                    f -> f.range(
+                            r -> r.lte(Util.toJsonData(request.getEndAtBefore()))
+                                    .field("endAt")
+                    )
+            );
+        }
     }
 
     private void setOwnerFilterQuery(Builder builder, ReservationSearchRequest request) {
