@@ -38,4 +38,8 @@ public class AuctionService {
         auction.setReservation(reservation);
         auctionDao.save(auction);
     }
+
+    public void delete(AuctionDto auctionDto) {
+        auctionDao.deleteById(auctionDto.getId());
+    }
 }
