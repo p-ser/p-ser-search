@@ -38,6 +38,9 @@ public class Room implements BaseDocument {
     @Field(type = FieldType.Text, analyzer = ESConstants.ANALYZER_KOREAN)
     private String description;
 
+    @Field(type = FieldType.Keyword)
+    private String mainImageUrl;
+
     @Field(type = FieldType.Text, analyzer = ESConstants.ANALYZER_KOREAN)
     private String precaution;
 
