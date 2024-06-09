@@ -9,14 +9,17 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 
 public class Util {
+    public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern(DateFormat.date.getPattern());
+    public static final DateTimeFormatter HOUR_MINUTE = DateTimeFormatter.ofPattern(DateFormat.hour_minute.getPattern());
+    public static final DateTimeFormatter DATE_HOUR_MINUTE = DateTimeFormatter.ofPattern(
+            DateFormat.date_hour_minute.getPattern());
+
     public static String toFormattedString(LocalDate localDate) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat.date.getPattern());
-        return localDate.format(dateTimeFormatter);
+        return localDate.format(DATE);
     }
 
     public static String toFormattedString(LocalDateTime localDateTime) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormat.date_hour_minute.getPattern());
-        return localDateTime.format(dateTimeFormatter);
+        return localDateTime.format(DATE_HOUR_MINUTE);
     }
 
     public static JsonData toJsonData(LocalDate localDate) {
