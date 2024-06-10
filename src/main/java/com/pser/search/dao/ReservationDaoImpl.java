@@ -40,6 +40,10 @@ public class ReservationDaoImpl implements ReservationDaoCustom {
     }
 
     private void setKeywordQuery(Builder outerBuilder, ReservationSearchRequest request) {
+        if (request.getKeyword() == null) {
+            return;
+        }
+
         Builder hotelQueryBuilder = QueryBuilders.bool();
         Builder roomQueryBuilder = QueryBuilders.bool();
         String hotelPath = "hotel";
