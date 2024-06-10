@@ -45,6 +45,9 @@ public class Auction implements BaseDocument {
     private Integer price;
 
     @Field(type = FieldType.Integer)
+    private Integer reservationPrice;
+
+    @Field(type = FieldType.Integer)
     private Integer endPrice;
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute)
