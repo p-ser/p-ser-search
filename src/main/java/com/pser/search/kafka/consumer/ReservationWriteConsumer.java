@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ReservationWriteConsumer {
     private final ReservationService reservationService;
 
-    @RetryableTopic(kafkaTemplate = "reservationDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "reservationDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {KafkaTopics.RESERVATION_CREATED,
             KafkaTopics.RESERVATION_UPDATED}, groupId = "${kafka.consumer-group-id}", containerFactory = "reservationDtoValueListenerContainerFactory")
     public void onCreatedOrUpdated(ReservationDto reservationDto) {

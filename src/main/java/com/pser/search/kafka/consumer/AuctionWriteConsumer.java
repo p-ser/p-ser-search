@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 public class AuctionWriteConsumer {
     private final AuctionService auctionService;
 
-    @RetryableTopic(kafkaTemplate = "auctionDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "auctionDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {KafkaTopics.AUCTION_CREATED,
             KafkaTopics.AUCTION_UPDATED}, groupId = "${kafka.consumer-group-id}", containerFactory = "auctionDtoValueListenerContainerFactory")
     public void onCreatedOrUpdated(AuctionDto auctionDto) {
         auctionService.saveOrUpdate(auctionDto);
     }
 
-    @RetryableTopic(kafkaTemplate = "auctionDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "auctionDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {
             KafkaTopics.AUCTION_DELETED}, groupId = "${kafka.consumer-group-id}", containerFactory = "auctionDtoValueListenerContainerFactory")
     public void onDeleted(AuctionDto auctionDto) {

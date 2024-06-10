@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 public class HotelWriteConsumer {
     private final HotelService hotelService;
 
-    @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {KafkaTopics.HOTEL_CREATED,
             KafkaTopics.HOTEL_UPDATED}, groupId = "${kafka.consumer-group-id}", containerFactory = "hotelDtoValueListenerContainerFactory")
     public void onCreatedOrUpdated(HotelDto hotelDto) {
         hotelService.saveOrUpdate(hotelDto);
     }
 
-    @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "hotelDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {
             KafkaTopics.HOTEL_DELETED}, groupId = "${kafka.consumer-group-id}", containerFactory = "hotelDtoValueListenerContainerFactory")
     public void onDeleted(HotelDto hotelDto) {

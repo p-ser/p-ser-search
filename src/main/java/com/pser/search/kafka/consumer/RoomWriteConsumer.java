@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 public class RoomWriteConsumer {
     private final RoomService roomService;
 
-    @RetryableTopic(kafkaTemplate = "roomDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "roomDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {KafkaTopics.ROOM_CREATED,
             KafkaTopics.ROOM_UPDATED}, groupId = "${kafka.consumer-group-id}", containerFactory = "roomDtoValueListenerContainerFactory")
     public void onCreatedOrUpdated(RoomDto roomDto) {
         roomService.saveOrUpdate(roomDto);
     }
 
-    @RetryableTopic(kafkaTemplate = "roomDtoValueKafkaTemplate", attempts = "5")
+    @RetryableTopic(kafkaTemplate = "roomDtoValueKafkaTemplate", attempts = "5", retryTopicSuffix = "-retry-${kafka.consumer-group-id}")
     @KafkaListener(topics = {
             KafkaTopics.ROOM_DELETED}, groupId = "${kafka.consumer-group-id}", containerFactory = "roomDtoValueListenerContainerFactory")
     public void onDeleted(RoomDto roomDto) {
